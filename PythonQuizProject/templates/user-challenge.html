@@ -1,1 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Challenge Mode</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/user-challenge.css' %}">
+</head>
+
+<body class="page-bg">
+
+<header class="header">
+    <h1 class="title">AI Challenge Mode</h1>
+
+    <nav class="nav">
+        <a href="user-challenge.html" class="nav-link active">User Challenge</a>
+        <span class="divider">·</span>
+        <a href="ai-challenge.html" class="nav-link">AI Challenge</a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="card neumorphic">
+        <h2 class="section-title">User Challenge Mode</h2>
+
+        <label class="label">Enter your English request:</label>
+
+        <textarea class="input-box neumorphic-inset"
+            placeholder="Ví dụ: 'Dịch câu sau', 'Đặt câu với environment', 'Sửa câu sau cho tự nhiên'"></textarea>
+
+        <button class="btn-primary neumorphic-btn">Ask AI</button>
+    </section>
+
+    <section class="card response-box neumorphic-inset">
+        <h3 class="section-title">AI Response:</h3>
+        <p class="placeholder-text">(Nội dung AI sẽ hiển thị ở đây — phiên bản tĩnh)</p>
+    </section>
+
+</main>
+
+</body>
+</html>
 
