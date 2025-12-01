@@ -1,1 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>AI Challenge Mode</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>AI Challenge Mode</h1>
+    <nav>
+        <a href="user-challenge.html">User Challenge</a>
+        <a href="ai-challenge.html">AI Challenge</a>
+    </nav>
+</header>
+
+<main>
+    <h2>Try an AI-generated question!</h2>
+
+    <div class="ai-question">
+        <p><strong>Question (Vocabulary):</strong> What is the synonym of "happy"?</p>
+
+        <input type="text" id="answerInput" placeholder="Your answer">
+        <button id="submitBtn">Submit Answer</button>
+    </div>
+
+    <div class="ai-feedback" id="feedback" style="display:none;">
+        <p id="feedbackText"></p>
+        <p id="scoreText"></p>
+    </div>
+</main>
+
+<script>
+document.getElementById('submitBtn').addEventListener('click', function() {
+    const answer = document.getElementById('answerInput').value.trim().toLowerCase();
+    const feedbackDiv = document.getElementById('feedback');
+    const feedbackText = document.getElementById('feedbackText');
+    const scoreText = document.getElementById('scoreText');
+
+    if (answer === "joyful" || answer === "glad") {
+        feedbackText.textContent = "Correct! Well done.";
+        scoreText.textContent = "Score: 10/10";
+    } 
+    else if (answer === "") {
+        feedbackText.textContent = "Please enter an answer.";
+        scoreText.textContent = "";
+    } 
+    else {
+        feedbackText.textContent = "Incorrect. Try next time!";
+        scoreText.textContent = "Score: 0/10";
+    }
+
+    feedbackDiv.style.display = "block";
+});
+</script>
+
+</body>
+</html>
 
