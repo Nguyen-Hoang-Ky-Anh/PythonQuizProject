@@ -19,8 +19,10 @@
 <main>
     <h2>Try an AI-generated question!</h2>
 
-    <div class="ai-question">
-        <p><strong>Question (Vocabulary):</strong> What is the synonym of "happy"?</p>
+    <button id="startBtn">Start AI Challenge</button>
+
+    <div class="ai-question" id="questionBox" style="display:none; margin-top:20px;">
+        <p id="questionText"><strong>Question:</strong></p>
 
         <input type="text" id="answerInput" placeholder="Your answer">
         <button id="submitBtn">Submit Answer</button>
@@ -33,22 +35,87 @@
 </main>
 
 <script>
+// =====================
+// DATA: QUESTIONS
+// =====================
+const questions = [
+    {
+        type: "Vocabulary",
+        question: "What is a synonym of 'happy'?",
+        answers: ["joyful", "glad", "cheerful"]
+    },
+    {
+        type: "Vocabulary",
+        question: "What is the antonym of 'strong'?",
+        answers: ["weak"]
+    },
+    {
+        type: "Grammar",
+        question: "Choose the correct sentence: (A) She don't like tea. (B) She doesn't like tea.",
+        answers: ["b", "she doesn't like tea", "b she doesn't like tea"]
+    },
+    {
+        type: "Grammar",
+        question: "Fill in the blank: He ___ to school every day. (go)",
+        answers: ["goes"]
+    },
+    {
+        type: "Translation",
+        question: "Translate to English: 'Tôi thích học tiếng Anh.'",
+        answers: ["i like learning english", "i like to learn english"]
+    },
+    {
+        type: "Translation",
+        question: "Translate to English: 'Con mèo đang ngủ.'",
+        answers: ["the cat is sleeping"]
+    }
+];
+
+let currentQuestion = null;
+
+// =====================
+// START BUTTON
+// =====================
+document.getElementById('startBtn').addEventListener('click', function() {
+    // Random câu hỏi
+    currentQuestion = questions[Math.floor(Math.random() * questions.length)];
+
+    // Hiển thị câu hỏi
+    document.getElementById('questionText').innerHTML = 
+        `<strong>Question (${currentQuestion.type}):</strong> ${currentQuestion.question}`;
+
+    document.getElementById('questionBox').style.display = "block";
+
+    // Reset feedback
+    document.getElementById('feedback').style.display = "none";
+    document.getElementById('answerInput').value = "";
+});
+
+// =====================
+// SUBMIT ANSWER BUTTON
+// =====================
 document.getElementById('submitBtn').addEventListener('click', function() {
-    const answer = document.getElementById('answerInput').value.trim().toLowerCase();
+    const userAnswer = document.getElementById('answerInput').value.trim().toLowerCase();
     const feedbackDiv = document.getElementById('feedback');
     const feedbackText = document.getElementById('feedbackText');
     const scoreText = document.getElementById('scoreText');
 
-    if (answer === "joyful" || answer === "glad") {
+    if (!currentQuestion) return;
+
+    if (userAnswer === "") {
+        feedbackText.textContent = "Please enter an answer.";
+        feedbackDiv.style.display = "block";
+        return;
+    }
+
+    // Kiểm tra câu trả lời
+    const correct = currentQuestion.answers.some(ans => userAnswer === ans);
+
+    if (correct) {
         feedbackText.textContent = "Correct! Well done.";
         scoreText.textContent = "Score: 10/10";
-    } 
-    else if (answer === "") {
-        feedbackText.textContent = "Please enter an answer.";
-        scoreText.textContent = "";
-    } 
-    else {
-        feedbackText.textContent = "Incorrect. Try next time!";
+    } else {
+        feedbackText.textContent = "Incorrect. The correct answer could be: " + currentQuestion.answers.join(", ");
         scoreText.textContent = "Score: 0/10";
     }
 
@@ -58,4 +125,3 @@ document.getElementById('submitBtn').addEventListener('click', function() {
 
 </body>
 </html>
-
