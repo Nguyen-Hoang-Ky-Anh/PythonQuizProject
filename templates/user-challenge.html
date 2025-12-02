@@ -16,7 +16,6 @@
 
     <nav class="nav">
         <a href="{% url 'user-challenge' %}" class="nav-link active">User Challenge</a>
-        <span class="divider">·</span>
         <a href="{% url 'ai-challenge' %}" class="nav-link">AI Challenge</a>
     </nav>
 </header>
@@ -27,11 +26,12 @@
         <h2 class="section-title">User Challenge Mode</h2>
 
         <label class="label">Enter your English request:</label>
-
-        <textarea class="input-box neumorphic-inset"
-            placeholder="Ví dụ: 'Dịch câu sau', 'Đặt câu với environment', 'Sửa câu sau cho tự nhiên'"></textarea>
-
-        <button class="btn-primary neumorphic-btn">Ask AI</button>
+        <div class="input-container">
+            <textarea class="input-box neumorphic-inset"
+                placeholder="Ví dụ: 'Dịch câu sau', 'Đặt câu với environment', 'Sửa câu sau cho tự nhiên'"></textarea>
+            <button class="btn-primary neumorphic-btn">Ask AI</button>
+        </div>
+        
     </section>
 
     <section class="card response-box neumorphic-inset">

@@ -12,6 +12,18 @@ body {
     color: white;
 }
 
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px
+}
+
+.header a {
+    text-decoration: none;
+    color: white;
+}
+
 .container {
     max-width: 900px;
     margin: 30px auto;
@@ -26,7 +38,7 @@ body {
     box-shadow: 0 0 15px rgba(0,0,0,0.08);
 }
 
-.ai-box {
+.ai-questtion {
     background: #ecf0f1;
     padding: 15px;
     border-radius: 8px;

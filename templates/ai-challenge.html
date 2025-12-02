@@ -11,7 +11,7 @@
 
 <body>
 
-<header>
+<header class="header">
     <h1>Which Mode?</h1>
     <nav>
         <a href="{% url 'ai-challenge' %}">AI Challenge</a>
@@ -19,7 +19,7 @@
     </nav>
 </header>
 
-<main>
+<main class="container">
     <h2>Try an AI-generated question!</h2>
 
     <button id="startBtn">Start AI Challenge</button>
@@ -28,7 +28,7 @@
         <p id="questionText"><strong>Question:</strong></p>
 
         <input type="text" id="answerInput" placeholder="Your answer">
-        <button id="submitBtn">Submit Answer</button>
+        <button class="btn-run">Run</button>
     </div>
 
     <div class="ai-feedback" id="feedback" style="display:none;">
