@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Challenge Mode</title>
-    <link rel="stylesheet" href="{% static 'css/ai-challenge.css' %}">
+
+    <link rel="stylesheet" href= "{% static 'css/ai-challenge.css' %}">
 </head>
 
 <body>
@@ -13,8 +14,8 @@
 <header>
     <h1>Which Mode?</h1>
     <nav>
-        <a href="user-challenge.html">User Challenge</a>
-        <a href="ai-challenge.html">AI Challenge</a>
+        <a href="{% url 'ai-challenge' %}">AI Challenge</a>
+        <a href="{% url 'user-challenge' %}">User Challenge</a>
     </nav>
 </header>
 

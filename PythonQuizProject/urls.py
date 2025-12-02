@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from quizzes import views as quiz_views
-from ai_assistant import views as ai_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', quiz_views.home, name='home'),
+        path('ai-challenge/', quiz_views.ai_challenge, name='ai-challenge'),
+    path('user-challenge/', quiz_views.user_challenge, name='user-challenge'),
 ]
