@@ -21,6 +21,8 @@ from quizzes import views as quiz_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', quiz_views.home, name='home'),
-        path('ai-challenge/', quiz_views.ai_challenge, name='ai-challenge'),
+    path('ai-challenge/', quiz_views.ai_challenge, name='ai-challenge'),
     path('user-challenge/', quiz_views.user_challenge, name='user-challenge'),
+    path('home/', quiz_views.login, name = 'login'),
+    path('login/', quiz_views.register, name = 'register')
 ]

@@ -9,3 +9,9 @@ def ai_challenge(request):
 
 def user_challenge(request):
     return render(request, 'user-challenge.html')
+
+def login(request):
+    return render(request, 'login.html')
+
+def register(request):
+    return render(request, 'register.html')

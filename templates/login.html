@@ -15,8 +15,8 @@
         <nav class="main-nav">
             <ul>
                 <li><a href="index.html">Trang Chủ</a></li>
-                <li><a href="#ai-challenge">AI Challenge Mode</a></li>
-                <li><a href="#user-challenge">User Challenge Mode</a></li>
+                <li><a href="{% url 'ai-challenge' %}">AI Challenge Mode</a></li>
+                <li><a href="{% url 'user-challenge' %}">User Challenge Mode</a></li>
                 <li><a href="#mini-games">Mini Games</a></li>
                 <li><a href="#leaderboard">Leaderboard</a></li>
             </ul>
@@ -47,7 +47,7 @@
             <button type="submit" class="login-button">Đăng nhập</button>
 
             <div class="login-register">
-                Bạn chưa có tài khoản? <a href="Register.html">Đăng ký</a>
+                Bạn chưa có tài khoản? <a href="{% url 'register' %}">Đăng ký</a>
 
             </div>
         </form>
