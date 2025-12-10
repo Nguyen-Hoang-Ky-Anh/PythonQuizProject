@@ -1,3 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Challenge</title>
+</head>
+<body>
+
+<h2>Hỏi AI</h2>
+
+<form method="POST" id="askForm">
+    {% csrf_token %}
+    <input type="text" name="question" placeholder="Nhập câu hỏi..." style="width:300px">
+    <button type="submit">Gửi</button>
+</form>
+
+<div id="result"></div>
+
+<script>
+document.getElementById("askForm").onsubmit = async (e) => {
+    e.preventDefault();
+    
+    let form = new FormData(e.target);
+    let res = await fetch("", {
+        method: "POST",
+        body: form
+    });
+
+    let data = await res.json();
+    
+    document.getElementById("result").innerHTML = `
+        <p><b>AI trả lời:</b> ${data.ai_answer}</p>
+    `;
+};
+</script>
+
+</body>
+</html>
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
