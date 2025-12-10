@@ -26,3 +26,8 @@ urlpatterns = [
     path('home/', quiz_views.login, name = 'login'),
     path('login/', quiz_views.register, name = 'register')
 ]
+from django.urls import include, path
+
+urlpatterns = [
+    path('', include('ai_assistant.urls')),
+]
