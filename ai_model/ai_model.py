@@ -2,7 +2,6 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import os
 
-# Load API key từ file .env
 load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -25,7 +24,7 @@ def ask_ai(question: str) -> str:
             max_tokens=250
         )
 
-        return response.choices[0].message["content"]
+        return response.choices[0].message.content
 
     except Exception as e:
         return f"Lỗi khi gọi AI: {e}"
