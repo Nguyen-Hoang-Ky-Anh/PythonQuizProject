@@ -128,3 +128,24 @@ document.getElementById('submitBtn').addEventListener('click', function() {
 
 </body>
 </html>
+<script>
+async function battleAI(questionId) {
+    const res = await fetch(`/assistant/ai-challenge/?id=${questionId}`);
+    const data = await res.json();
+
+    document.getElementById("ai-answer").innerText = data.ai_answer;
+    document.getElementById("correct-answer").innerText = data.correct_answer;
+
+    if (data.ai_correct) {
+        document.getElementById("ai-result").innerText = "AI trả lời đúng!";
+    } else {
+        document.getElementById("ai-result").innerText = "AI trả lời sai!";
+    }
+}
+</script>
+<div class="ai-box">
+    <h3>AI trả lời</h3>
+    <p id="ai-answer">...</p>
+    <p>Kết quả: <span id="ai-result"></span></p>
+    <p>Đáp án đúng: <b id="correct-answer"></b></p>
+</div>
