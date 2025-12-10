@@ -33,6 +33,7 @@ def ai_quiz_check_view(request, question_id):
     """
     AI trả lời câu hỏi trong hệ thống QUIZ và kiểm tra đúng/sai.
     """
+    
     try:
         question = Question.objects.get(id=question_id)
     except Question.DoesNotExist:
@@ -49,4 +50,28 @@ def ai_quiz_check_view(request, question_id):
         "correct_answer": question.correct_answer,
         "ai_reply": ai_reply,
         "is_correct": is_correct
+    })
+from django.http import JsonResponse
+from ai_model.ai_model import ask_ai
+from quizzes.models import Question
+
+def ai_challenge_api(request):
+    question_id = request.GET.get("id")
+
+    try:
+        q = Question.objects.get(id=question_id)
+    except:
+        return JsonResponse({"error": "Câu hỏi không tồn tại"})
+
+    # AI trả lời với khả năng 60%
+    ai_answer = ask_ai(q.question)
+
+    # Kiểm tra đúng sai
+    is_correct = q.correct_answer.lower() in ai_answer.lower()
+
+    return JsonResponse({
+        "question": q.question,
+        "ai_answer": ai_answer,
+        "correct_answer": q.correct_answer,
+        "ai_correct": is_correct,
     })
