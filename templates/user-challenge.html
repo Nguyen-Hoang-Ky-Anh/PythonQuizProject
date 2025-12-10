@@ -19,15 +19,16 @@
 <script>
 document.getElementById("askForm").onsubmit = async (e) => {
     e.preventDefault();
-    
+
     let form = new FormData(e.target);
-    let res = await fetch("", {
+    let res = await fetch(window.location.href, {
         method: "POST",
-        body: form
+        body: form,
+        credentials: "same-origin"
     });
 
     let data = await res.json();
-    
+
     document.getElementById("result").innerHTML = `
         <p><b>AI trả lời:</b> ${data.ai_answer}</p>
     `;
