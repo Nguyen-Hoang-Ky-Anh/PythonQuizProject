@@ -1,151 +1,94 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Challenge Mode</title>
-
-    <link rel="stylesheet" href= "{% static 'css/ai-challenge.css' %}">
+    <title>AI Challenge</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .box {
+            padding: 20px;
+            border: 2px solid #000;
+            width: 500px;
+        }
+        .correct { color: green; font-weight: bold; }
+        .wrong { color: red; font-weight: bold; }
+    </style>
 </head>
-
 <body>
 
-<header class="header">
-    <h1>Which Mode?</h1>
-    <nav>
-        <a href="{% url 'ai-challenge' %}">AI Challenge</a>
-        <a href="{% url 'user-challenge' %}">User Challenge</a>
-    </nav>
-</header>
+<h1>AI Challenge: User đấu AI</h1>
 
-<main class="container">
-    <h2>Try an AI-generated question!</h2>
+<div class="box">
+    <p id="question">Nhấn Start để bắt đầu</p>
+    <div id="options"></div>
 
-    <button id="startBtn">Start AI Challenge</button>
+    <button onclick="startQuiz()">Start</button>
 
-    <div class="ai-question" id="questionBox" style="display:none; margin-top:20px;">
-        <p id="questionText"><strong>Question:</strong></p>
+    <p><b>Điểm User:</b> <span id="userScore">0</span></p>
+    <p><b>Điểm AI:</b> <span id="aiScore">0</span></p>
 
-        <input type="text" id="answerInput" placeholder="Your answer">
-        <button class="btn-run">Run</button>
-    </div>
-
-    <div class="ai-feedback" id="feedback" style="display:none;">
-        <p id="feedbackText"></p>
-        <p id="scoreText"></p>
-    </div>
-</main>
+    <p id="result"></p>
+</div>
 
 <script>
-// =====================
-// DATA: QUESTIONS
-// =====================
-const questions = [
-    {
-        type: "Vocabulary",
-        question: "What is a synonym of 'happy'?",
-        answers: ["joyful", "glad", "cheerful"]
-    },
-    {
-        type: "Vocabulary",
-        question: "What is the antonym of 'strong'?",
-        answers: ["weak"]
-    },
-    {
-        type: "Grammar",
-        question: "Choose the correct sentence: (A) She don't like tea. (B) She doesn't like tea.",
-        answers: ["b", "she doesn't like tea", "b she doesn't like tea"]
-    },
-    {
-        type: "Grammar",
-        question: "Fill in the blank: He ___ to school every day. (go)",
-        answers: ["goes"]
-    },
-    {
-        type: "Translation",
-        question: "Translate to English: 'Tôi thích học tiếng Anh.'",
-        answers: ["i like learning english", "i like to learn english"]
-    },
-    {
-        type: "Translation",
-        question: "Translate to English: 'Con mèo đang ngủ.'",
-        answers: ["the cat is sleeping"]
-    }
-];
+let currentQuestion = "";
+let userScore = 0;
+let aiScore = 0;
 
-let currentQuestion = null;
+function startQuiz() {
+    fetch("/ai/api/get_ai_question/")
+        .then(res => res.json())
+        .then(data => {
+            currentQuestion = data.question;
+            document.getElementById("question").innerText = data.question;
 
-// =====================
-// START BUTTON
-// =====================
-document.getElementById('startBtn').addEventListener('click', function() {
-    // Random câu hỏi
-    currentQuestion = questions[Math.floor(Math.random() * questions.length)];
+            let html = "";
+            data.options.forEach(opt => {
+                html += `<button onclick="submitUserAnswer('${opt}')">${opt}</button><br>`;
+            });
 
-    // Hiển thị câu hỏi
-    document.getElementById('questionText').innerHTML = 
-        `<strong>Question (${currentQuestion.type}):</strong> ${currentQuestion.question}`;
+            document.getElementById("options").innerHTML = html;
+            document.getElementById("result").innerText = "";
+        });
+}
 
-    document.getElementById('questionBox').style.display = "block";
+function submitUserAnswer(userChoice) {
+    // user kiểm tra
+    fetch("/ai/api/ai_answer/?question=" + encodeURIComponent(currentQuestion))
+        .then(res => res.json())
+        .then(aiData => {
 
-    // Reset feedback
-    document.getElementById('feedback').style.display = "none";
-    document.getElementById('answerInput').value = "";
-});
+            let correct = aiData.ai_correct_answer;
 
-// =====================
-// SUBMIT ANSWER BUTTON
-// =====================
-document.getElementById('submitBtn').addEventListener('click', function() {
-    const userAnswer = document.getElementById('answerInput').value.trim().toLowerCase();
-    const feedbackDiv = document.getElementById('feedback');
-    const feedbackText = document.getElementById('feedbackText');
-    const scoreText = document.getElementById('scoreText');
+            // ---------------------------------
+            // USER CHECK
+            // ---------------------------------
+            if (userChoice === correct) {
+                userScore++;
+                document.getElementById("result").innerHTML +=
+                    `<p class='correct'>User đúng!</p>`;
+            } else {
+                document.getElementById("result").innerHTML +=
+                    `<p class='wrong'>User sai! Đáp án: ${correct}</p>`;
+            }
 
-    if (!currentQuestion) return;
+            // ---------------------------------
+            // AI CHECK
+            // ---------------------------------
+            if (aiData.is_correct) {
+                aiScore++;
+                document.getElementById("result").innerHTML +=
+                    `<p class='correct'>AI đúng (${aiData.ai_answer})</p>`;
+            } else {
+                document.getElementById("result").innerHTML +=
+                    `<p class='wrong'>AI sai (${aiData.ai_answer})</p>`;
+            }
 
-    if (userAnswer === "") {
-        feedbackText.textContent = "Please enter an answer.";
-        feedbackDiv.style.display = "block";
-        return;
-    }
-
-    // Kiểm tra câu trả lời
-    const correct = currentQuestion.answers.some(ans => userAnswer === ans);
-
-    if (correct) {
-        feedbackText.textContent = "Correct! Well done.";
-        scoreText.textContent = "Score: 10/10";
-    } else {
-        feedbackText.textContent = "Incorrect. The correct answer could be: " + currentQuestion.answers.join(", ");
-        scoreText.textContent = "Score: 0/10";
-    }
-
-    feedbackDiv.style.display = "block";
-});
+            document.getElementById("userScore").innerText = userScore;
+            document.getElementById("aiScore").innerText = aiScore;
+        });
+}
 </script>
 
 </body>
 </html>
-<script>
-async function battleAI(questionId) {
-    const res = await fetch(`/assistant/ai-challenge/?id=${questionId}`);
-    const data = await res.json();
-
-    document.getElementById("ai-answer").innerText = data.ai_answer;
-    document.getElementById("correct-answer").innerText = data.correct_answer;
-
-    if (data.ai_correct) {
-        document.getElementById("ai-result").innerText = "AI trả lời đúng!";
-    } else {
-        document.getElementById("ai-result").innerText = "AI trả lời sai!";
-    }
-}
-</script>
-<div class="ai-box">
-    <h3>AI trả lời</h3>
-    <p id="ai-answer">...</p>
-    <p>Kết quả: <span id="ai-result"></span></p>
-    <p>Đáp án đúng: <b id="correct-answer"></b></p>
-</div>
