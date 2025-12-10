@@ -2,38 +2,51 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.shortcuts import render
+from django.http import JsonResponse
+from ai_model.ai_model import ask_ai
 from quizzes.models import Question
-from ai_model.ai_model import ask_ai_for_quiz
 
-def user_vs_ai(request):
-question = Question.objects.order_by("?").first()  # random 1 câu
 
-```
-user_answer = None
-ai_answer = None
-result_user = None
-result_ai = None
+def user_challenge_view(request):
+    """
+    Trang cho người dùng nhập câu hỏi vào để hỏi AI.
+    """
+    if request.method == "POST":
+        user_question = request.POST.get("question", "")
 
-if request.method == "POST":
-    user_answer = request.POST.get("answer")
+        if not user_question.strip():
+            return JsonResponse({"error": "Bạn phải nhập câu hỏi!"})
 
-    # AI trả lời
-    ai_answer = ask_ai_for_quiz(
-        question_text := f"Câu hỏi: {question.text}\nA: {question.option_a}\nB: {question.option_b}\nC: {question.option_c}\nD: {question.option_d}\nTrả lời theo A/B/C/D.",
-        correct_answer=question.correct_answer
-    )
+        # Gửi câu hỏi đến AI
+        ai_answer = ask_ai(user_question)
 
-    # Check user
-    result_user = (user_answer.upper() == question.correct_answer.upper())
+        return JsonResponse({
+            "question": user_question,
+            "ai_answer": ai_answer
+        })
 
-    # Check AI
-    result_ai = (question.correct_answer.upper() in ai_answer.upper())
+    return render(request, "user-challenge.html")
+    
 
-return render(request, "user_challenge.html", {
-    "question": question,
-    "user_answer": user_answer,
-    "ai_answer": ai_answer,
-    "result_user": result_user,
-    "result_ai": result_ai,
-})
-```
+
+def ai_quiz_check_view(request, question_id):
+    """
+    AI trả lời câu hỏi trong hệ thống QUIZ và kiểm tra đúng/sai.
+    """
+    try:
+        question = Question.objects.get(id=question_id)
+    except Question.DoesNotExist:
+        return JsonResponse({"error": "Câu hỏi không tồn tại."})
+
+    # Gửi câu hỏi quiz cho AI
+    ai_reply = ask_ai(question.question)
+
+    # Kiểm tra đúng sai
+    is_correct = question.correct_answer.lower() in ai_reply.lower()
+
+    return JsonResponse({
+        "question": question.question,
+        "correct_answer": question.correct_answer,
+        "ai_reply": ai_reply,
+        "is_correct": is_correct
+    })
