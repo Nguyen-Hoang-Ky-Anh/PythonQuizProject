@@ -16,18 +16,25 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.http import HttpResponse
 from quizzes import views as quiz_views
+from django.urls import include, path
+
+def home(request):
+    return HttpResponse("Trang chủ Quiz Project!")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # Trang chủ
     path('', quiz_views.home, name='home'),
+
+    # Quiz views
     path('ai-challenge/', quiz_views.ai_challenge, name='ai-challenge'),
     path('user-challenge/', quiz_views.user_challenge, name='user-challenge'),
-    path('home/', quiz_views.login, name = 'login'),
-    path('login/', quiz_views.register, name = 'register')
-]
-from django.urls import include, path
+    path('home/', quiz_views.login, name='login'),
+    path('login/', quiz_views.register, name='register'),
 
-urlpatterns = [
-    path('', include('ai_assistant.urls')),
+    # Include app ai_assistant
+    path('assistant/', include('ai_assistant.urls')),
 ]
